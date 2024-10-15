@@ -34,11 +34,10 @@ export function SearchForm() {
 
       <input
         name="q"
-        required
         defaultValue={query ?? ''}
-        type="text"
         placeholder="Buscar produtos..."
-        className="flex-1 bg-transparent outline-none text-sm placeholder:text-zinc-500"
+        className="flex-1 bg-transparent text-sm outline-none placeholder:text-zinc-500"
+        required
       />
     </form>
   )

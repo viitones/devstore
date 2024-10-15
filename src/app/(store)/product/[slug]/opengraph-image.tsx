@@ -1,14 +1,14 @@
-import { api } from '@/data/api'
-import { Product } from '@/data/types/products'
-import { env } from '@/env'
-import { ImageResponse } from 'next/og'
+import { ImageResponse } from 'next/server'
 import colors from 'tailwindcss/colors'
 
-// Route segment config
+import { api } from '@/data/api'
+import { Product } from '@/data/types/product'
+import { env } from '@/env'
+
 export const runtime = 'edge'
 
-// Image metadata
-export const alt = 'About Acme'
+export const alt = ''
+
 export const size = {
   width: 1200,
   height: 630,
@@ -19,7 +19,7 @@ export const contentType = 'image/png'
 async function getProduct(slug: string): Promise<Product> {
   const response = await api(`/products/${slug}`, {
     next: {
-      revalidate: 60 * 60,
+      revalidate: 60 * 15, // 15 minutes
     },
   })
 
@@ -28,7 +28,6 @@ async function getProduct(slug: string): Promise<Product> {
   return product
 }
 
-// Image generation
 export default async function OgImage({
   params,
 }: {
@@ -36,11 +35,10 @@ export default async function OgImage({
 }) {
   const product = await getProduct(params.slug)
 
-  const productImageUrl = new URL(product.image, env.APP_URL).toString()
+  const productImageURL = new URL(product.image, env.APP_URL).toString()
 
   return new ImageResponse(
     (
-      // ImageResponse JSX element
       <div
         style={{
           background: colors.zinc[950],
@@ -50,13 +48,10 @@ export default async function OgImage({
           flexDirection: 'column',
         }}
       >
-        <img src={productImageUrl} alt="" style={{ width: '100%' }} />
+        <img src={productImageURL} alt="" style={{ width: '100%' }} />
       </div>
     ),
-    // ImageResponse options
     {
-      // For convenience, we can re-use the exported opengraph-image
-      // size config to also set the ImageResponse's width and height.
       ...size,
     },
   )
