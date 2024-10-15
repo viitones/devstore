@@ -12,6 +12,17 @@ export const metadata: Metadata = {
     template: '%s | devstore',
     default: 'devstore',
   },
+  metadataBase: new URL('https://acme.com'),
+  alternates: {
+    canonical: '/',
+    languages: {
+      'en-US': '/en-US',
+      'de-DE': '/de-DE',
+    },
+  },
+  openGraph: {
+    images: '/og-image.png',
+  },
 }
 
 export default function RootLayout({
